@@ -237,16 +237,22 @@ sub w { cluck @_ }
 
 # $Carp::MaxArgNums
 {
-    my $i    = 0;
     my $aref = [
-        qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, 3, 4\) called at \S*(?i:carp.t) line \d+/,
-        qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, \.\.\.\) called at \S*(?i:carp.t) line \d+/,
+        [
+            0 => 
+            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, 3, 4\) called at \S*(?i:carp.t) line \d+/,
+        ], [
+            1 => 
+            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, \.\.\.\) called at \S*(?i:carp.t) line \d+/,
+        ]
     ];
 
     for (@$aref) {
-        local $Carp::MaxArgNums = $i++;
+        my ($arg_count, $expected) = @$_;
+
+        local $Carp::MaxArgNums = $arg_count;
         local $SIG{__WARN__} = sub {
-            like "@_", $_, 'MaxArgNums';
+            like "@_", $expected, 'MaxArgNums';
         };
 
         package Z;
