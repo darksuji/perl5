@@ -3,7 +3,7 @@ no warnings "once";
 use Config;
 
 use IPC::Open3 1.0103 qw(open3);
-use Test::More tests => 60;
+use Test::More tests => 65;
 
 sub runperl {
     my(%args) = @_;
@@ -239,11 +239,26 @@ sub w { cluck @_ }
 {
     my $aref = [
         [
+            -1 => 
+            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(\.\.\.\) called at \S*(?i:carp.t) line \d+/,
+        ], [
             0 => 
             qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, 3, 4\) called at \S*(?i:carp.t) line \d+/,
         ], [
+            '0 but true' => 
+            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, \.\.\.\) called at \S*(?i:carp.t) line \d+/,
+        ], [
             1 => 
             qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, \.\.\.\) called at \S*(?i:carp.t) line \d+/,
+        ], [
+            3 => # less than the number of arguments passed
+            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, 3, 4, \.\.\.\) called at \S*(?i:carp.t) line \d+/,
+        ], [
+            4 => # equal to the number of arguments passed
+            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, 3, 4\) called at \S*(?i:carp.t) line \d+/,
+        ], [
+            5 => # greater than the number of arguments passed
+            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, 3, 4\) called at \S*(?i:carp.t) line \d+/,
         ]
     ];
 
