@@ -238,32 +238,19 @@ sub w { cluck @_ }
 # $Carp::MaxArgNums
 {
     my $aref = [
-        [
-            -1 => 
-            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(\.\.\.\) called at \S*(?i:carp.t) line \d+/,
-        ], [
-            0 => 
-            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, 3, 4\) called at \S*(?i:carp.t) line \d+/,
-        ], [
-            '0 but true' => 
-            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, \.\.\.\) called at \S*(?i:carp.t) line \d+/,
-        ], [
-            1 => 
-            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, \.\.\.\) called at \S*(?i:carp.t) line \d+/,
-        ], [
-            3 => # less than the number of arguments passed
-            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, 3, 4, \.\.\.\) called at \S*(?i:carp.t) line \d+/,
-        ], [
-            4 => # equal to the number of arguments passed
-            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, 3, 4\) called at \S*(?i:carp.t) line \d+/,
-        ], [
-            5 => # greater than the number of arguments passed
-            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\(1, 2, 3, 4\) called at \S*(?i:carp.t) line \d+/,
-        ]
+        [ -1            => '(...)' ],
+        [ 0             => '(1, 2, 3, 4)' ],
+        [ '0 but true'  => '(1, ...)' ],
+        [ 1             => '(1, 2, ...)' ],
+        [ 3             => '(1, 2, 3, 4, ...)' ],   # less than the number of arguments passed
+        [ 4             => '(1, 2, 3, 4)' ],        # equal to the number of arguments passed
+        [ 5             => '(1, 2, 3, 4)' ],        # greater than the number of arguments passed
     ];
 
     for (@$aref) {
-        my ($arg_count, $expected) = @$_;
+        my ($arg_count, $expected_signature) = @$_;
+        my $expected = 
+            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\Q$expected_signature\E called at \S*(?i:carp.t) line \d+/;
 
         local $Carp::MaxArgNums = $arg_count;
         local $SIG{__WARN__} = sub {
