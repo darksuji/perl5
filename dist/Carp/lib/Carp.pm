@@ -783,7 +783,8 @@ Defaults to C<64>.
 =head2 $Carp::MaxArgNums
 
 This variable determines how many arguments to each function to show.
-Use a value of C<0> to show all arguments to a function call.
+Use a false value to show all arguments to a function call.  To suppress all
+arguments, use C<-1> or C<'0 but true'>.
 
 Defaults to C<8>.
 
