@@ -229,7 +229,7 @@ sub caller_info {
             my $overflow;
             if ( $MaxArgNums and @args > $MaxArgNums )
             {    # More than we want to show?
-                $#args = $MaxArgNums;
+                $#args = $MaxArgNums - 1;
                 $overflow = 1;
             }
 
