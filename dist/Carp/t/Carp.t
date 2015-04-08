@@ -240,11 +240,11 @@ sub w { cluck @_ }
     my $aref = [
         [ -1            => '(...)' ],
         [ 0             => '(1, 2, 3, 4)' ],
-        [ '0 but true'  => '(1, ...)' ],
-        [ 1             => '(1, 2, ...)' ],
-        [ 3             => '(1, 2, 3, 4, ...)' ],   # less than the number of arguments passed
-        [ 4             => '(1, 2, 3, 4)' ],        # equal to the number of arguments passed
-        [ 5             => '(1, 2, 3, 4)' ],        # greater than the number of arguments passed
+        [ '0 but true'  => '(...)' ],
+        [ 1             => '(1, ...)' ],
+        [ 3             => '(1, 2, 3, ...)' ],  # less than the number of arguments passed
+        [ 4             => '(1, 2, 3, 4)' ],    # equal to the number of arguments passed
+        [ 5             => '(1, 2, 3, 4)' ],    # greater than the number of arguments passed
     ];
 
     for (@$aref) {
@@ -254,7 +254,7 @@ sub w { cluck @_ }
 
         local $Carp::MaxArgNums = $arg_count;
         local $SIG{__WARN__} = sub {
-            like "@_", $expected, 'MaxArgNums';
+            like "@_", $expected, "MaxArgNums=$arg_count";
         };
 
         package Z;
