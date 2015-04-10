@@ -242,15 +242,18 @@ sub w { cluck @_ }
         [ 0             => '(1, 2, 3, 4)' ],
         [ '0 but true'  => '(...)' ],
         [ 1             => '(1, ...)' ],
-        [ 3             => '(1, 2, 3, ...)' ],  # less than the number of arguments passed
-        [ 4             => '(1, 2, 3, 4)' ],    # equal to the number of arguments passed
-        [ 5             => '(1, 2, 3, 4)' ],    # greater than the number of arguments passed
+        [ 3             => '(1, 2, 3, ...)' ],
+        [ 4             => '(1, 2, 3, 4)' ],
+        [ 5             => '(1, 2, 3, 4)' ],
     ];
 
     for (@$aref) {
         my ($arg_count, $expected_signature) = @$_;
-        my $expected = 
-            qr/1234 at \S*(?i:carp.t) line \d+\.\n\s*main::w\Q$expected_signature\E called at \S*(?i:carp.t) line \d+/;
+        my $expected = qr/
+            1234\ at\ \S*(?i:carp.t)\ line\ \d+\.\n
+            \s*main::w\Q$expected_signature\E\ 
+            called\ at\ \S*(?i:carp.t)\ line\ \d+
+        /x;
 
         local $Carp::MaxArgNums = $arg_count;
         local $SIG{__WARN__} = sub {
